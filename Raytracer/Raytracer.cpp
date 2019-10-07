@@ -11,10 +11,19 @@
 
 using namespace std;
 
+vec3 randomInUnitSphere() {
+	vec3 p;
+	do {
+		p = 2.0f * vec3((double)rand() / RAND_MAX, (double)rand() / RAND_MAX, (double)rand() / RAND_MAX) - vec3(1, 1, 1);
+	} while (p.squaredLength() >= 1.0f);
+	return p;
+}
+
 vec3 colour(const ray& r, hitable *world) {
 	hitRecord rec;
-	if (world->hit(r, 0.0f, FLT_MAX, rec)) {
-		return 0.5f*vec3(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1);
+	if (world->hit(r, 0.001f, FLT_MAX, rec)) { //if hit detected, reflect randomly
+		vec3 target = rec.p + rec.normal + randomInUnitSphere();
+		return 0.5f*colour(ray(rec.p, target - rec.p), world); //calculate colour again.
 	}
 	else {
 		vec3 unitDir = unitVector(r.direction());
@@ -46,6 +55,7 @@ int main()
 				col += colour(r, world);
 			}
 			col /= float(ns);
+			col = vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
 			int ir = int(255.99*col[0]);
 			int ig = int(255.99*col[1]);
 			int ib = int(255.99*col[2]);
