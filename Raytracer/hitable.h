@@ -3,10 +3,13 @@
 
 #include "ray.h"
 
+class material; //forward declaration of a class, to avoid circular includes (class A including class B which includes class A etc.)
+
 struct hitRecord {
 	float t; 
 	vec3 p;
 	vec3 normal;
+	material *matPtr;
 };
 
 class hitable {
