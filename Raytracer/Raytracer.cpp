@@ -50,7 +50,12 @@ int main()
 	list[3] = new sphere(vec3(-1, 0, -1), 0.5, new dielectric(1.5f));
 	list[4] = new sphere(vec3(-1, 0, -1), -0.45, new dielectric(1.5f));
 	hitable *world = new hitable_list(list, 5);
-	camera cam(vec3(-2,2,1), vec3(0,0,-1), vec3(0,1,0), 25, float(nx)/float(ny));
+
+	vec3 lookfrom(3, 3, 2);
+	vec3 lookat(0, 0, -1);
+	float distToFocus = (lookfrom - lookat).length();
+	float aperture = 2.0f;
+	camera cam(lookfrom, lookat, vec3(0,1,0), 20, float(nx)/float(ny), aperture, distToFocus);
 	for (int j = ny - 1; j >= 0; j--) { // for each row of pixels
 		for (int i = 0; i < nx; i++) { // for each column of pixels
 			vec3 col(0, 0, 0);
